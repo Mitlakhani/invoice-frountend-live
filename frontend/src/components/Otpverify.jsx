@@ -7,7 +7,7 @@ import logo from '../../public/img/logo.png'
 const Otpverify = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [error, setError] = useState("");
-
+  const [loading, setLoading] = useState(true);
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
     const updatedOtp = [...otp];
