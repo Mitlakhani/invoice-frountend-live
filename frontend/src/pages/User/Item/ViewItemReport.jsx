@@ -23,7 +23,7 @@ const ViewItemReport = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8001/api/item/getitembyitemid/${id}`
+          `https://invoich-backend.onrender.com/api/item/getitembyitemid/${id}`
         );
         const result = await response.json();
 

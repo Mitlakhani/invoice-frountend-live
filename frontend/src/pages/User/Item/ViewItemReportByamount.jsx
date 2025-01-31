@@ -26,7 +26,7 @@
 //         }
 
 //         const response = await fetch(
-//           "http://localhost:8001/api/item/getallitem",
+//           "https://invoich-backend.onrender.com/api/item/getallitem",
 //           {
 //             method: "GET",
 //             headers: {

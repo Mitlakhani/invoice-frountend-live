@@ -478,6 +478,14 @@ const CustomerForm = () => {
                 "text",
                 "billingAddress"
               )}
+              {renderInputField(
+                "Billing Address",
+                "address",
+                "text",
+                "addresses",
+                0,
+                "billingAddress"
+              )}
             </div>
 
             <h3 className="text-lg font-medium mt-6 mb-4">Shipping Address</h3>
@@ -504,6 +512,14 @@ const CustomerForm = () => {
                 "Shipping Country",
                 "country",
                 "text",
+                "shippingAddress"
+              )}
+              {renderInputField(
+                "Shipping Address",
+                "address",
+                "text",
+                "addresses",
+                0,
                 "shippingAddress"
               )}
             </div>

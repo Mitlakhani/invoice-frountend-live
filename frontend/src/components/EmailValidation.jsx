@@ -40,7 +40,7 @@ const EmailValidation = () => {
     try {
       // Call the correct API for OTP verification
       const registerResponse = await fetch(
-        "http://localhost:8001/api/user/registerUser",
+        "https://invoich-backend.onrender.com/api/user/registerUser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -69,7 +69,7 @@ const EmailValidation = () => {
         });
 
         setTimeout(() => {
-          navigate("/emailvarification", { state: { formData, businessId } });
+          navigate("/", { state: { formData, businessId } });
         }, 3000);
       // Redirect after success
       } else {

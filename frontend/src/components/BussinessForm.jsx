@@ -255,7 +255,7 @@ export const BussinessForm = () => {
       try {
         // Step 1: Submit Business API
         const businessResponse = await fetch(
-          "http://localhost:8001/api/business/registerBusiness",
+          "https://invoich-backend.onrender.com/api/business/registerBusiness",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -279,7 +279,7 @@ export const BussinessForm = () => {
 
         // Step 2: Submit User Registration API
         const registerResponse = await fetch(
-          "http://localhost:8001/api/user/registerUser",
+          "https://invoich-backend.onrender.com/api/user/registerUser",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

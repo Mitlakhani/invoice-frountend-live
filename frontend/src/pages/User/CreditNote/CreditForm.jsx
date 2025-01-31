@@ -219,9 +219,10 @@ const CreditForm = () => {
         );
 
         console.log("Response:", response); // Log successful response
-        toast.success("Credit note created successfully!").then(() => {
-          navigate("/user/credits");
-        });
+        toast.success("Credit note created successfully!");
+        setTimeout(() => {
+          navigate("/user/credits", { replace: true });
+        }, 1000);
       } catch (error) {
         console.error(
           "Error during API call:",

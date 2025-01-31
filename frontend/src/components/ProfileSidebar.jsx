@@ -40,9 +40,45 @@ const ProfileSidebar = () => {
     fetchProfileData();
   }, [token]);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const selectedImage = e.target.files[0];
+    if (!selectedImage) return;
+
     setImage(selectedImage);
+    await uploadImage(selectedImage);
+  };
+
+  const uploadImage = async (selectedImage) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+
+    try {
+      const response = await fetch(
+        `https://invoich-backend.onrender.com/api/business/updateBusiness/${businessId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to upload image");
+
+      const updatedData = await response.json();
+      setProfileData((prev) => ({
+        ...prev,
+        imageUrl: updatedData.imageUrl,
+      }));
+    } catch (error) {
+      setErrorMessage(
+        error.message || "An error occurred while uploading the image."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleImageClick = () => {

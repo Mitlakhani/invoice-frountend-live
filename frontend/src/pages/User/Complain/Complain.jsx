@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios"; // Axios for API calls
-import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Skeleton from "react-loading-skeleton"; // If you installed the library
 import "react-loading-skeleton/dist/skeleton.css"; // If you are using the library
 
@@ -27,7 +28,9 @@ export const Complain = () => {
   // Fetch requests on component mount
   useEffect(() => {
     axios
-      .get('https://invoich-backend.onrender.com/api/usercomplain/getallcomplain')
+      .get(
+        "https://invoich-backend.onrender.com/api/usercomplain/getallcomplain"
+      )
       .then((response) => {
         const data = response.data;
         const filteredData = data.filter(
@@ -117,28 +120,31 @@ export const Complain = () => {
               )
             );
             handleModalClose();
-            Swal.fire("Success", "Request updated successfully!", "success");
+            toast.success("Request updated successfully!");
           })
           .catch((error) => {
             console.error("Error updating request:", error);
-            Swal.fire("Error", "Failed to update request.", "error");
+            toast.error("Failed to update request.");
           });
       } else {
         // Add new request
         axios
-          .post("https://invoich-backend.onrender.com/api/usercomplain/creatusercomplain", {
-            ...newRequest,
-            status: "pending",
-            userId,
-          })
+          .post(
+            "https://invoich-backend.onrender.com/api/usercomplain/creatusercomplain",
+            {
+              ...newRequest,
+              status: "pending",
+              userId,
+            }
+          )
           .then((response) => {
             setRequests((prevRequests) => [...prevRequests, response.data]);
             handleModalClose();
-            Swal.fire("Success", "Request added successfully!", "success");
+            toast.success("Request added successfully!");
           })
           .catch((error) => {
             console.error("Error adding request:", error);
-            Swal.fire("Error", "Failed to add request.", "error");
+            toast.error("Failed to added request.");
           });
       }
     }
@@ -146,6 +152,7 @@ export const Complain = () => {
 
   return (
     <div className="bg-gray-100 p-3">
+      <ToastContainer position="top-right" autoClose={3000} />
       {/* Filter and search section */}
       <div className="p-4 flex flex-wrap gap-2 items-center justify-between bg-white rounded">
         <div className="flex flex-wrap gap-2 items-center w-full md:w-auto">

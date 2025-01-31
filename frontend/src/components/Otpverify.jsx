@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import logo from '../../public/img/logo.png'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import logo from '../../public/img/logo.png'
 
 const Otpverify = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [loading,setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const email = location.state?.email;
+
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
     const updatedOtp = [...otp];
@@ -61,7 +67,7 @@ const Otpverify = () => {
       if (response.ok) {
         toast.success("OTP Verified Successfully!");
         setTimeout(() => {
-          navigate("/resetpsw"); // Navigate to reset password page
+          navigate("/resetpsw",{ state: { email } }); // Navigate to reset password page
         }, 1500);
       } else {
         toast.error(data.message || "Invalid or expired OTP.");

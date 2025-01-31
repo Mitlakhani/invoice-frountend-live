@@ -74,14 +74,14 @@ const InvoiceForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const customerResponse = await fetch("http://localhost:8001/api/customer/viewCustomers", {
+        const customerResponse = await fetch("https://invoich-backend.onrender.com/api/customer/viewCustomers", {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         });
         const customerData = await customerResponse.json();
         const filteredCustomers = customerData.filter(customer => customer.userId == userId);
         setCustomers(filteredCustomers);
 
-        const itemResponse = await fetch("http://localhost:8001/api/item/getallitem", {
+        const itemResponse = await fetch("https://invoich-backend.onrender.com/api/item/getallitem", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const itemData = await itemResponse.json();
@@ -89,7 +89,7 @@ const InvoiceForm = () => {
         const filteredItems = itemData.filter(item => item.userId == userId);
         setItems(filteredItems);
 
-        const salespersonResponse = await fetch("http://localhost:8001/api/salespersons/getallsalespersone", {
+        const salespersonResponse = await fetch("https://invoich-backend.onrender.com/api/salespersons/getallsalespersone", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const salespersonData = await salespersonResponse.json();
@@ -98,7 +98,7 @@ const InvoiceForm = () => {
 
         if (id) {
           // Fetching single invoice data if in edit mode
-          const invoiceResponse = await fetch(`http://localhost:8001/api/invoice/ViewById/${id}`, {
+          const invoiceResponse = await fetch(`https://invoich-backend.onrender.com/api/invoice/ViewById/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const invoiceDatares = await invoiceResponse.json();
@@ -291,8 +291,8 @@ const InvoiceForm = () => {
 
     // Determine the endpoint and method based on whether it's an update or create operation
     const endpoint = id
-      ? `http://localhost:8001/api/invoice/updateById/${id}`
-      : "http://localhost:8001/api/invoice/create";
+      ? `https://invoich-backend.onrender.com/api/invoice/updateById/${id}`
+      : "https://invoich-backend.onrender.com/api/invoice/create";
     const method = id ? "PUT" : "POST";
     try {
       const response = await fetch(endpoint, {

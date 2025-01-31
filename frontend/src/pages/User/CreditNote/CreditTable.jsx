@@ -4,7 +4,8 @@ import { MdDelete, MdAdd } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Upload } from "lucide-react";
@@ -53,17 +54,11 @@ const CreditTable = () => {
   }, [token, userId, file]);
 
   const deleteCredit = async (id) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#438A7A",
-      cancelButtonColor: "#D1D5DB",
-      confirmButtonText: "Yes, delete it!",
-    });
+    const isConfirmed = window.confirm(
+      "Are you sure? This action cannot be undone!"
+    );
 
-    if (result.isConfirmed) {
+    if (isConfirmed) {
       try {
         const response = await axios.delete(
           `https://invoich-backend.onrender.com/api/creditNotes/${id}`,
@@ -76,18 +71,10 @@ const CreditTable = () => {
         const updatedCredits = credits.filter((credit) => credit._id !== id);
         setCredits(updatedCredits);
 
-        await Swal.fire(
-          "Deleted!",
-          "The credit note has been deleted.",
-          "success"
-        );
+        toast.success("The credit note has been deleted successfully!");
       } catch (error) {
         console.error("Error deleting credit note:", error);
-        await Swal.fire(
-          "Error!",
-          "There was an issue deleting the credit note.",
-          "error"
-        );
+        toast.error("There was an issue deleting the credit note.");
       }
     }
   };
@@ -115,7 +102,7 @@ const CreditTable = () => {
   // Upload CSV file
   const uploadCSV = async () => {
     if (!file) {
-      Swal.fire("Please upload a CSV file first");
+      toast.warn("Please upload a CSV file first");
       return;
     }
 
@@ -135,14 +122,14 @@ const CreditTable = () => {
       );
 
       if (response.ok) {
-        Swal.fire("Success!", "CSV file uploaded successfully", "success");
+        toast.success("CSV file uploaded successfully");
         setFile(null);
       } else {
-        Swal.fire("Error!", "Failed to upload CSV file", "error");
+        toast.error("Failed to upload CSV file");
       }
     } catch (error) {
       console.error("Error uploading CSV file:", error);
-      Swal.fire("Error!", "An error occurred during upload", "error");
+      toast.error("An error occurred during upload");
     }
   };
 
@@ -200,6 +187,7 @@ const CreditTable = () => {
   };
   return (
     <div className="bg-[#F6F8FB] p-3">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="bg-white rounded-lg md:p-2 shadow-lg">
         <div className="top flex md:flex-row flex-col justify-between md:items-center p-2 pb-5">
           <div className="heading font-bold text-[26px] new-lg:text-xl new-xl:text-[26px]">

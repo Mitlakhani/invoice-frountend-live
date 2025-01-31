@@ -6,7 +6,8 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import Swal from "sweetalert2";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Upload } from "lucide-react";
 import Skeleton from "react-loading-skeleton"; // Import Skeleton
 
@@ -80,7 +81,7 @@ export const Items = () => {
   // Upload CSV file
   const uploadCSV = async () => {
     if (!file) {
-      Swal.fire("Please upload a CSV file first");
+      toast.warn("Please upload a CSV file first");
       return;
     }
 
@@ -97,14 +98,14 @@ export const Items = () => {
       );
 
       if (response.ok) {
-        Swal.fire("Success!", "CSV file uploaded successfully", "success");
+        toast.success("CSV file uploaded successfully");
         setFile(null);
       } else {
-        Swal.fire("Error!", "Failed to upload CSV file", "error");
+        toast.error("Failed to upload CSV file");
       }
     } catch (error) {
       console.error("Error uploading CSV file:", error);
-      Swal.fire("Error!", "An error occurred during upload", "error");
+      toast.error("An error occurred during upload");
     }
   };
 
@@ -120,46 +121,32 @@ export const Items = () => {
 
   // Handle item deletion
   const handleDelete = async (id) => {
-    // Show confirmation popup
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    });
+    if (!window.confirm("Are you sure you want to delete this item?")) {
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `https://invoich-backend.onrender.com/api/item/deletitem/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) throw new Error("Failed to delete item");
 
-    if (result.isConfirmed) {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(
-          `https://invoich-backend.onrender.com/api/item/deletitem/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (!response.ok) throw new Error("Failed to delete item");
+      // Show success message
+      toast.success("Item deleted successfully");
 
-        // Show success message
-        await Swal.fire("Deleted!", "The item has been deleted.", "success");
-
-        // Update state to remove item from list
-        const updatedItems = items.filter((item) => item._id !== id);
-        setItems(updatedItems);
-      } catch (err) {
-        console.error("Error deleting item:", err);
-        setError("Failed to delete item");
-        await Swal.fire(
-          "Error!",
-          "There was an issue deleting the item.",
-          "error"
-        );
-      }
+      // Update state to remove item from list
+      const updatedItems = items.filter((item) => item._id !== id);
+      setItems(updatedItems);
+    } catch (err) {
+      console.error("Error deleting item:", err);
+      setError("Failed to delete item");
+      toast.error("There was an issue deleting the item");
     }
   };
 

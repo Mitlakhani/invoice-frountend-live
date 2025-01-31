@@ -57,7 +57,7 @@ export const ItemForm = () => {
     if (id) {
       // Fetch existing item data for editing
       fetch(
-        `https://invoich-backend.onrender.com/api/item/getitembyuserid/${id}`
+        `https://invoich-backend.onrender.com/api/item/getitembyitemid/${id}`
       )
         .then((response) => {
           if (!response.ok) throw new Error("Failed to fetch item data");

@@ -3,7 +3,8 @@ import { FaBars, FaEdit, FaEye } from "react-icons/fa";
 import { MdDelete, MdAdd } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Upload } from "lucide-react";
@@ -98,31 +99,11 @@ const Expenses = () => {
 
   // Delete an expense
   const deleteExpense = async (id) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#438A7A",
-      cancelButtonColor: "#D1D5DB",
-      confirmButtonText: "Yes, delete it!",
-    });Swal.fire({
-      title: "Are you sure?",
-      text: "This customer will be deleted permanently.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#438A7A",
-      cancelButtonColor: "#D1D5DB",
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
-      customClass: {
-        cancelButton: 'custom-cancel'
-      },
-      didOpen: () => {
-        document.querySelector('.custom-cancel').style.color = "black"; // Replace with your desired text color
-      }
-    })
-    if (result.isConfirmed) {
+    const isConfirmed = window.confirm(
+      "Are you sure? You won't be able to revert this!"
+    );
+
+    if (isConfirmed) {
       try {
         const response = await fetch(
           `https://invoich-backend.onrender.com/api/expenses/expenses/${id}`,
@@ -140,26 +121,20 @@ const Expenses = () => {
             prevExpenses.filter((expense) => expense._id !== id)
           );
 
-          await Swal.fire(
-            "Deleted!",
-            "The expense has been deleted.",
-            "success"
-          );
+          toast.success("Expense deleted successfully!", {
+            position: "top-right",
+          });
         } else {
           console.error("Failed to delete the expense");
-          await Swal.fire(
-            "Error!",
-            "There was an issue deleting the expense.",
-            "error"
-          );
+          toast.error("Failed to delete the expense", {
+            position: "top-right",
+          });
         }
       } catch (error) {
         console.error("Error deleting the expense:", error);
-        await Swal.fire(
-          "Error!",
-          "There was an issue deleting the expense.",
-          "error"
-        );
+        toast.error("An error occurred while deleting the expense", {
+          position: "top-right",
+        });
       }
     }
   };
@@ -190,7 +165,9 @@ const Expenses = () => {
   // Upload CSV file
   const uploadCSV = async () => {
     if (!file) {
-      Swal.fire("Please upload a CSV file first");
+      toast.warning("Please upload a CSV file first", {
+        position: "top-right",
+      });
       return;
     }
 
@@ -210,14 +187,16 @@ const Expenses = () => {
       );
 
       if (response.ok) {
-        Swal.fire("Success!", "CSV file uploaded successfully", "success");
+        toast.success("CSV file uploaded successfully", {
+          position: "top-right",
+        });
         setFile(null);
       } else {
-        Swal.fire("Error!", "Failed to upload CSV file", "error");
+        toast.error("Failed to upload CSV file", { position: "top-right" });
       }
     } catch (error) {
       console.error("Error uploading CSV file:", error);
-      Swal.fire("Error!", "An error occurred during upload", "error");
+      toast.error("An error occurred during upload", { position: "top-right" });
     }
   };
 
@@ -417,13 +396,13 @@ const Expenses = () => {
                     <td className="p-3 text-[#030229] text-center">
                       <div className="flex justify-center space-x-4">
                         <button
-                           className="w-8 h-8 text-[#0EABEB] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm mx-2 cursor-pointer"
+                          className="w-8 h-8 text-[#0EABEB] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm mx-2 cursor-pointer"
                           onClick={() => viewExpense(expense._id)}
                         >
                           <FaEye />
                         </button>
                         <button
-                         className="w-8 h-8 text-[#39973D] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm cursor-pointer"
+                          className="w-8 h-8 text-[#39973D] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm cursor-pointer"
                           onClick={() => editExpense(expense._id)}
                         >
                           <FaEdit />

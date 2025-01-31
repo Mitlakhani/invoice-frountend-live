@@ -4,7 +4,8 @@ import { FaBars, FaEdit, FaEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Upload } from "lucide-react";
 
 function Invoice() {
@@ -77,7 +78,7 @@ function Invoice() {
   // Upload CSV file
   const uploadCSV = async () => {
     if (!file) {
-      Swal.fire("Please upload a CSV file first");
+      toast.warning("Please upload a CSV file first");
       return;
     }
 
@@ -97,36 +98,32 @@ function Invoice() {
       );
 
       if (response.ok) {
-        Swal.fire("Success!", "CSV file uploaded successfully", "success");
+        toast.success("CSV file uploaded successfully");
         setFile(null);
       } else {
-        Swal.fire("Error!", "Failed to upload CSV file", "error");
+        toast.error("Failed to upload CSV file");
       }
     } catch (error) {
       console.error("Error uploading CSV file:", error);
-      Swal.fire("Error!", "An error occurred during upload", "error");
+      toast.error("An error occurred during upload");
     }
   };
 
   const deleteInvoice = async (id) => {
+    if (
+      !window.confirm("Are you sure? This will delete the invoice permanently.")
+    ) {
+      return;
+    }
+
     try {
-      const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "This will delete the invoice permanently.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-        customClass: {
-          confirmButton: 'custom-confirm',
-          cancelButton: 'custom-cancel'
-        },
-        didOpen: () => {
-          document.querySelector('.custom-confirm').style.backgroundColor = '#438A7A'; // Change confirm button background color
-          document.querySelector('.custom-cancel').style.backgroundColor = '#D1D5DB'; // Change cancel button background color
+      const response = await fetch(
+        `https://invoich-backend.onrender.com/api/invoice/deleteById/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
         }
-      });
+      );
 
       if (result.isConfirmed) {
         const response = await fetch(
@@ -138,18 +135,14 @@ function Invoice() {
         );
 
         if (response.ok) {
-          Swal.fire("Deleted!", "The invoice has been deleted.", "success");
+          toast.success("Invoice deleted successfully");
           setInvoices(invoices.filter((invoice) => invoice._id !== id));
         } else {
-          Swal.fire("Error!", "Failed to delete the invoice.", "error");
+          toast.error("Failed to delete invoice");
         }
       }
     } catch (error) {
-      Swal.fire(
-        "Error!",
-        "An error occurred while deleting the invoice.",
-        "error"
-      );
+      toast.error("An error occurred while deleting the invoice");
     }
   };
 

@@ -214,7 +214,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export const AdminComplain = () => {
   const [requests, setRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
@@ -271,35 +272,38 @@ export const AdminComplain = () => {
           updatedRequest
         );
 
-
         setRequests((prevRequests) =>
           prevRequests.map((request) =>
             request._id === selectedRequest._id ? updatedRequest : request
           )
         );
 
-        // Show success alert
-        Swal.fire({
-          icon: "success",
-          title: "Updated!",
-          text: "The request has been updated successfully.",
-          confirmButtonColor: "#438A7A",
+        toast.success("The request has been updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
       } catch (error) {
         console.error("Error updating request:", error);
-
-        // Show error alert
-        Swal.fire({
-          icon: "error",
-          title: "Error!",
-          text: "Failed to update the request. Please try again later.",
-          confirmButtonColor: "#d33",
+        toast.error("Failed to update the request. Please try again later.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
       }
     }
   };
 
-  // Filtered requests
   const filteredRequests = requests.filter((request) => {
     const matchesSearchTerm =
       searchTerm === "" ||
@@ -318,8 +322,10 @@ export const AdminComplain = () => {
     );
   });
 
+
   return (
     <div className="bg-gray-100 p-3">
+       <ToastContainer />
       <div>
         <div className="p-4 flex flex-wrap gap-2 items-center justify-between bg-white rounded">
           <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async (e) => {
@@ -168,17 +170,16 @@ const ChangePassword = () => {
           />
         </div>
 
-          <div className="text-left">
-            <button
-              type="submit"
-              className="w-full px-4 py-2 text-white bg-[#438A7A] rounded-lg"
-              disabled={loading}
-            >
-              {loading ? "Changing Password..." : "Change Password"}
-            </button>
-          </div>
-        </form>
-      )}
+        <div className="text-left">
+          <button
+            type="submit"
+            className="w-full px-4 py-2 text-white bg-[#438A7A] rounded-lg"
+            disabled={loading}
+          >
+            {loading ? "Changing Password..." : "Change Password"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

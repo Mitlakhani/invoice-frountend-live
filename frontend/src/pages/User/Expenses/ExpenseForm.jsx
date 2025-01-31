@@ -93,20 +93,14 @@ const ExpenseForm = () => {
         body: formDataToSubmit,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to submit expense");
+      if (response.status === 201) {
+        toast.success(
+          id ? "Expense updated successfully" : "Expense added successfully"
+        );
+        setTimeout(() => {
+          navigate("/user/expenses", { replace: true });
+        }, 1000);
       }
-
-      toast.success(
-        id ? "Expense updated successfully" : "Expense added successfully",
-        {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-          hideProgressBar: true,
-        }
-      );
-
-      navigate("/user/expenses");
     } catch (error) {
       console.error("Error submitting expense:", error);
       toast.error("Failed to submit expense. Please try again.", {

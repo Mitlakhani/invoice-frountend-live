@@ -3,7 +3,8 @@ import { FaBars, FaEdit, FaEye } from "react-icons/fa";
 import { MdAdd, MdDelete } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Upload } from "lucide-react";
@@ -54,9 +55,12 @@ export const PurchaseInvoice = () => {
           ...invoice,
           date: formatDate(invoice.createdAt), // Format createdAt
         }));
+        console.log(data);
+
         const filteredInvoices = data.filter(
-          (invoice) => invoice.userId === userId
+          (invoice) => invoice.userId == userId
         );
+        console.log(filteredInvoices);
         setInvoiceData(filteredInvoices);
       } catch (err) {
         console.error("Error fetching invoices:", err);
@@ -93,7 +97,7 @@ export const PurchaseInvoice = () => {
   // Upload CSV file
   const uploadCSV = async () => {
     if (!file) {
-      Swal.fire("Please upload a CSV file first");
+      toast.error("Please upload a CSV file first");
       return;
     }
 
@@ -113,14 +117,14 @@ export const PurchaseInvoice = () => {
       );
 
       if (response.ok) {
-        Swal.fire("Success!", "CSV file uploaded successfully", "success");
+        toast.success("CSV file uploaded successfully");
         setFile(null);
       } else {
-        Swal.fire("Error!", "Failed to upload CSV file", "error");
+        toast.error("Failed to upload CSV file");
       }
     } catch (error) {
       console.error("Error uploading CSV file:", error);
-      Swal.fire("Error!", "An error occurred during upload", "error");
+      toast.error("An error occurred during upload");
     }
   };
 
@@ -129,51 +133,28 @@ export const PurchaseInvoice = () => {
   };
 
   const handleDelete = async (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "This will delete the invoice permanently.",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      reverseButtons: true,
-      customClass: {
-        confirmButton: 'custom-confirm',
-        cancelButton: 'custom-cancel'
-      },
-      didOpen: () => {
-        document.querySelector('.custom-confirm').style.backgroundColor = '#438A7A'; // Change confirm button text color
-        document.querySelector('.custom-cancel').style.backgroundColor = '#D1D5DB'; // Change cancel button text color
-
+    if (window.confirm("Are you sure you want to delete this invoice?")) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `https://invoich-backend.onrender.com/api/purchaseInvoice/deletepurchaseinvoice/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) throw new Error("Failed to delete invoice");
+        const updatedInvoices = invoiceData.filter((item) => item._id !== id);
+        setInvoiceData(updatedInvoices);
+        toast.success("Invoice deleted successfully");
+      } catch (err) {
+        console.error("Error deleting invoice:", err);
+        setError("Failed to delete invoice");
+        toast.error("Something went wrong while deleting the invoice");
       }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const token = localStorage.getItem("token");
-          const response = await fetch(
-            `https://invoich-backend.onrender.com/api/purchaseInvoice/deletepurchaseinvoice/${id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (!response.ok) throw new Error("Failed to delete invoice");
-          const updatedInvoices = invoiceData.filter((item) => item._id !== id);
-          setInvoiceData(updatedInvoices);
-          Swal.fire("Deleted!", "Your invoice has been deleted.", "success");
-        } catch (err) {
-          console.error("Error deleting invoice:", err);
-          setError("Failed to delete invoice");
-          Swal.fire(
-            "Error!",
-            "Something went wrong while deleting the invoice.",
-            "error"
-          );
-        }
-      }
-    });
+    }
   };
 
   const handleAddInvoice = () => {
