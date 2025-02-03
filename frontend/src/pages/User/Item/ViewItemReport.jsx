@@ -159,7 +159,7 @@ const ViewItemReport = () => {
             <h3>Stock Movement Report</h3>
           </div>
           <div className="flex gap-2">
-            <div className="flex justify-end p-2">
+            {/* <div className="flex justify-end p-2">
               <select
                 value={sortCriteria}
                 onChange={handleSortChange}
@@ -168,7 +168,7 @@ const ViewItemReport = () => {
                 <option value="stock">By Stock</option>
                 <option value="amount">By Amount</option>
                </select>
-             </div>
+             </div> */}
              <div className="relative mt-2">
                <button
                  onClick={toggleDropdown}

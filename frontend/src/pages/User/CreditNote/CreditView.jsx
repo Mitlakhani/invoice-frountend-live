@@ -101,7 +101,7 @@ const CreditView = () => {
                 )}
               </p>
               <p className="text-gray-600 font-bold text-lg">
-                Total: $
+                Total: ₹
                 {credit.invoiceDetails?.total?.toFixed(2) || (
                   <Skeleton width={60} />
                 )}

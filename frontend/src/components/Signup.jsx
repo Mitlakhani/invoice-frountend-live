@@ -65,18 +65,21 @@ const SignUp = () => {
           const cityOptions = City.getCitiesOfState(countryCode, stateCode);
           const selectedCity = cityOptions.find((c) => c.name === city);
   
+          // Clear errors if valid ZipCode is entered
+          setErrors({});
+  
           // Update the form state
           setSelectedCountry({ label: country, value: countryCode });
           setSelectedState({ label: state, value: state });
           setSelectedCity({ label: city, value: city });
   
-          setFormData({
-            ...formData,
+          setFormData((prevData) => ({
+            ...prevData,
             country: country,
             state: state,
             city: city,
             zipCode: zip,
-          });
+          }));
         } else {
           console.error("Invalid PinCode");
           setErrors({ zipCode: "Invalid PinCode. Please enter a valid Indian PinCode." });
@@ -87,6 +90,7 @@ const SignUp = () => {
       }
     }
   };
+  
   
       
 
@@ -185,16 +189,19 @@ const SignUp = () => {
   
 
   return (
-    <>
-       <div className="flex flex-col md:flex-row h-screen max-w-[1920px] mx-auto">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 max-w-full">
+      <div className="flex flex-col md:flex-row w-full max-w-[1920px] mx-auto h-screen bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Left Section */}
-      <div className="w-full md:w-1/2 p-6 bg-gray-100 flex flex-col items-center md:mt-10 mt-5">
-        {/* Logo */}
-        <img
+      <div className="w-full md:w-1/2 h-full p-6 md:p-10 flex flex-col justify-center items-center relative ">
+          {/* Logo in the top-left corner */}
+          <div className="mt-20 md:mt-40  xl:mt-0">
+
+          <img
             src="/img/logo.png"
             alt="Logo"
-            className="absolute top-2 left-4 md:top-0 md:left-6 h-10 sm:h-12 lg:h-10 md:h-12"
+            className="absolute top-4 left-4 md:top-6 md:left-6 h-10 sm:h-12 lg:h-10 md:h-12"
           />
+          </div>
         
         <div className="bg-white shadow-lg rounded-lg p-6 mt-5 md:mt-26 w-full max-w-md sm:max-w-lg md:max-w-xl z-50">
           <h1 className="text-2xl sm:text-3xl font-bold text-center text-[#438A7A]">Register</h1>
@@ -328,6 +335,30 @@ const SignUp = () => {
                      <p className="text-red-500 text-sm">{errors.address}</p>
                    )}
                  </div>
+                          {/* ZIP Code */}
+                <div className="w-full">
+                  <label
+                    htmlFor="zipCode"
+                    className="block text-gray-700 font-bold mb-2"
+                  >
+                    ZIP Code
+                  </label>
+                  <input
+                    type="text"
+                    id="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleZipChange}
+                    className={`w-full px-4 py-1.5 border border-gray-400 rounded-sm focus:outline-none ${
+                      errors.zipCode
+                        ? "border-red-500"
+                        : "focus:ring-2 focus:ring-bgprimary"
+                    }`}
+                    placeholder="Enter your ZIP"
+                  />
+                  {errors.zipCode && (
+                    <p className="text-red-500 text-sm">{errors.zipCode}</p>
+                  )}
+                </div>
 
                  {/* Country */}
                  <div className="w-full mb-4">
@@ -372,30 +403,7 @@ const SignUp = () => {
 
                  </div>
 
-                {/* ZIP Code */}
-                <div className="w-full">
-                  <label
-                    htmlFor="zipCode"
-                    className="block text-gray-700 font-bold mb-2"
-                  >
-                    ZIP Code
-                  </label>
-                  <input
-                    type="text"
-                    id="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleZipChange}
-                    className={`w-full px-4 py-1.5 border border-gray-400 rounded-sm focus:outline-none ${
-                      errors.zipCode
-                        ? "border-red-500"
-                        : "focus:ring-2 focus:ring-bgprimary"
-                    }`}
-                    placeholder="Enter your ZIP"
-                  />
-                  {errors.zipCode && (
-                    <p className="text-red-500 text-sm">{errors.zipCode}</p>
-                  )}
-                </div>
+       
 
                 {/* Category */}
                 <div className="w-full mb-4">
@@ -477,7 +485,7 @@ const SignUp = () => {
         </div>
       </div>
     </div>
-    </>
+    </div>
   );
 };
 

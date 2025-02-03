@@ -3,23 +3,23 @@ import React, { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
-import { MdOutlineHelp } from "react-icons/md";
-import { BiSolidSquareRounded } from "react-icons/bi";
 
-const Header = ({ onToggleSidebar, onSearch, theme, toggleTheme }) => {
+const Header = ({ onToggleSidebar, onSearch }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [profileData, setProfileData] = useState(null);
-  const token = localStorage.getItem("token");
-  const userId = JSON.parse(localStorage.getItem("user"))?.id;
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  // Get token & user data from localStorage
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
+  const userRole = user?.role; // Get user role from localStorage
 
   useEffect(() => {
     const fetchProfileData = async () => {
+      if (!userId) return;
+
       try {
         const response = await fetch(
           `https://invoich-backend.onrender.com/api/user/getuserbyid/${userId}`,
@@ -52,6 +52,7 @@ const Header = ({ onToggleSidebar, onSearch, theme, toggleTheme }) => {
   const handleProfileToggle = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -66,9 +67,7 @@ const Header = ({ onToggleSidebar, onSearch, theme, toggleTheme }) => {
   return (
     <header className="fixed top-0 right-0 left-0 lg:left-64 p-2 flex items-center justify-between transition-colors duration-300 z-20 bg-white dark:bg-[#17191A]">
       <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2 w-80">
-        <div className="text-xl text-gray-700 dark:text-gray-300">
-          <CiSearch />
-        </div>
+        <CiSearch className="text-xl text-gray-700 dark:text-gray-300" />
         <input
           type="text"
           placeholder="Search"
@@ -100,22 +99,26 @@ const Header = ({ onToggleSidebar, onSearch, theme, toggleTheme }) => {
               />
               <FaChevronDown className="text-xl dark:text-white" />
             </button>
+
+            {/* Profile Dropdown */}
             {isProfileMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg border bg-white dark:bg-gray-800">
-                <Link
-                  to="/user/userprofilepage"
-                  onClick={handleProfileToggle}
-                  className="block px-4 py-2 hover:bg-opacity-75 dark:text-white"
-                >
-                  View Profile
-                </Link>
-                <Link
-                  to="/"
+                {/* Hide 'View Profile' if role is 'admin' */}
+                {userRole !== "admin" && (
+                  <Link
+                    to="/user/userprofilepage"
+                    onClick={handleProfileToggle}
+                    className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-white"
+                  >
+                    View Profile
+                  </Link>
+                )}
+                <button
                   onClick={handleLogout}
-                  className="block px-4 py-2 hover:bg-opacity-75 dark:text-white"
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-white"
                 >
                   Log Out
-                </Link>
+                </button>
               </div>
             )}
           </div>

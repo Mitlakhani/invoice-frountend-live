@@ -4,8 +4,7 @@ import { FaBars, FaEdit, FaEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast, Toaster } from "react-hot-toast";
 import { Upload } from "lucide-react";
 
 function Invoice() {
@@ -14,6 +13,7 @@ function Invoice() {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
   const [file, setFile] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -66,7 +66,7 @@ function Invoice() {
     };
 
     fetchInvoices();
-  }, [token, file]);
+  }, [token, file, refresh]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -100,6 +100,7 @@ function Invoice() {
       if (response.ok) {
         toast.success("CSV file uploaded successfully");
         setFile(null);
+        setRefresh((prev) => !prev); // Trigger re-fetch
       } else {
         toast.error("Failed to upload CSV file");
       }
@@ -135,7 +136,15 @@ function Invoice() {
         );
 
         if (response.ok) {
-          toast.success("Invoice deleted successfully");
+          toast.success("Expense deleted successfully", {
+            duration: 3000,
+            position: "top-right",
+            style: {
+              background: "#4BB543",
+              color: "white",
+            },
+          });
+          setRefresh((prev) => !prev); // Trigger re-fetch
           setInvoices(invoices.filter((invoice) => invoice._id !== id));
         } else {
           toast.error("Failed to delete invoice");
@@ -214,6 +223,7 @@ function Invoice() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
+      <Toaster position="top-right" />
       <div className="bg-white shadow-md rounded p-6">
         <div className="flex md:flex-row flex-col justify-between md:items-center mb-6">
           <h1 className="font-bold text-[26px]">Invoices</h1>

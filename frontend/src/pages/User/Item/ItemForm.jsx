@@ -87,14 +87,23 @@ export const ItemForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setItemData((prevItemData) => ({
       ...prevItemData,
       [name]: value,
     }));
+
     setError((prevError) => ({
       ...prevError,
       [name]: "",
     }));
+
+    if (name === "taxPreference" && value === "non-taxable") {
+      setItemData((prevItemData) => ({
+        ...prevItemData,
+        defaultTaxRates: "1",
+      }));
+    }
   };
 
   const renderInput = (label, name, type) => (
@@ -107,9 +116,8 @@ export const ItemForm = () => {
         value={itemData[name]}
         name={name}
         onChange={handleInputChange}
-        className={`w-full rounded-md border ${
-          error[name] ? "border-red-500" : ""
-        } sm:text-sm p-2`}
+        className={`w-full rounded-md border ${error[name] ? "border-red-500" : ""
+          } sm:text-sm p-2`}
       />
       {error[name] && (
         <p className="text-red-500 text-xs italic">{error[name]}</p>
@@ -162,7 +170,7 @@ export const ItemForm = () => {
         stock: parseInt(itemData.stock, 10),
         openingStock: parseInt(itemData.stock, 10),
         price: parseFloat(itemData.price) || 0,
-        defaultTaxRates: parseFloat(itemData.defaultTaxRates),
+        defaultTaxRates: parseFloat(itemData.defaultTaxRates) || 1,
         userId,
       };
 
@@ -329,7 +337,17 @@ export const ItemForm = () => {
               </div>
             </div>
           </div>
-          {renderInput("Default Tax Rate (%)", "defaultTaxRates", "number")}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Default Tax Rate (%)</label>
+            <input
+              type="number"
+              name="defaultTaxRates"
+              value={itemData.defaultTaxRates}
+              onChange={handleInputChange}
+              disabled={itemData.taxPreference === "non-taxable"}
+              className="w-full p-2 border rounded"
+            />
+          </div>
         </div>
         <div className="flex justify-end">
           <button

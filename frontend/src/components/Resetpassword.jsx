@@ -75,7 +75,7 @@ export const ResetPassword = () => {
           <img
             src="/img/logo.png" // Replace with your logo path
             alt="Logo"
-            className="absolute top-6 left-6 h-12 sm:h-14"
+             className="absolute top-4 left-4 md:top-6 md:left-6 h-10 sm:h-12 lg:h-10 md:h-12"
           />
 
           <div className="md:w-[50%] w-full mt-20 md:mt-0 bg-white shadow-lg p-6 rounded-lg">

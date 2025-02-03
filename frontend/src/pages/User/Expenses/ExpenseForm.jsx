@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast, Toaster } from "react-hot-toast"; // New import for react-hot-toast
 
 const ExpenseForm = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +11,7 @@ const ExpenseForm = () => {
     receiptImage: null,
   });
   const navigate = useNavigate();
+
   const { id } = useParams();
   const token = localStorage.getItem("token");
 
@@ -93,26 +93,21 @@ const ExpenseForm = () => {
         body: formDataToSubmit,
       });
 
-      if (response.status === 201) {
+      if (response.ok) {
         toast.success(
           id ? "Expense updated successfully" : "Expense added successfully"
         );
-        setTimeout(() => {
-          navigate("/user/expenses", { replace: true });
-        }, 1000);
+        navigate("/user/expenses");
       }
     } catch (error) {
       console.error("Error submitting expense:", error);
-      toast.error("Failed to submit expense. Please try again.", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-        hideProgressBar: true,
-      });
+      toast.error("Failed to submit expense. Please try again.");
     }
   };
 
   return (
     <div className="bg-[#F6F8FB] flex justify-center items-center py-9 px-4 h-full">
+      <Toaster position="top-right" />
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl">
         {/* Title */}
         <div className="mb-6 text-center">

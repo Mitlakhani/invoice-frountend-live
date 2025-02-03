@@ -3,8 +3,7 @@ import { FaBars, FaEdit, FaEye } from "react-icons/fa";
 import { MdDelete, MdAdd } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast, Toaster } from "react-hot-toast"; // New import for react-hot-toast
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Upload } from "lucide-react";
@@ -99,6 +98,7 @@ const Expenses = () => {
 
   // Delete an expense
   const deleteExpense = async (id) => {
+    console.log("Delete button clicked for expense id:", id); // Add this log
     const isConfirmed = window.confirm(
       "Are you sure? You won't be able to revert this!"
     );
@@ -120,20 +120,31 @@ const Expenses = () => {
           setExpenses((prevExpenses) =>
             prevExpenses.filter((expense) => expense._id !== id)
           );
-
-          toast.success("Expense deleted successfully!", {
+          toast.success("Expense deleted successfully", {
+            duration: 3000,
             position: "top-right",
+            style: {
+              background: "#4BB543",
+              color: "white",
+            },
           });
         } else {
-          console.error("Failed to delete the expense");
           toast.error("Failed to delete the expense", {
-            position: "top-right",
+            duration: 3000,
+            style: {
+              background: "#E11D29",
+              color: "white",
+            },
           });
         }
       } catch (error) {
-        console.error("Error deleting the expense:", error);
         toast.error("An error occurred while deleting the expense", {
+          duration: 3000,
           position: "top-right",
+          style: {
+            background: "#E11D29",
+            color: "white",
+          },
         });
       }
     }
@@ -244,6 +255,7 @@ const Expenses = () => {
 
   return (
     <div className="bg-[#F6F8FB] p-3">
+      <Toaster position="top-right" />
       <div className="bg-white rounded-lg p-2 shadow-lg">
         <div className="top flex md:flex-row flex-col border-b  p-2">
           <div className="heading font-bold text-[26px] text-[#030229]">

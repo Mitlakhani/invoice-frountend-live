@@ -106,16 +106,15 @@ const CreditForm = () => {
     const item = updatedItems[index];
     item[name] =
       name === "quantity" ||
-      name === "rate" ||
-      name === "discount" ||
-      name === "tax"
+        name === "rate" ||
+        name === "discount" ||
+        name === "tax"
         ? parseFloat(value) || 0
         : value;
 
     // Recalculate amount for the row
     const discountAmount = (item.rate * item.quantity * item.discount) / 100;
-    const taxAmount =
-      ((item.rate * item.quantity - discountAmount) * item.tax) / 100;
+    const taxAmount = item.tax;
     item.amount = item.rate * item.quantity - discountAmount + taxAmount;
 
     setCreditData((prevData) => ({
@@ -263,19 +262,6 @@ const CreditForm = () => {
                 )}
               </div>
               <div>
-                <label className="block font-medium pb-1">Customer Name</label>
-                <input
-                  type="text"
-                  name="customername"
-                  value={creditData.customername}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border rounded"
-                />
-                {errors.customername && (
-                  <p className="text-red-500 text-sm">{errors.customername}</p>
-                )}
-              </div>
-              <div>
                 <label className="block font-medium pb-1">Invoice #</label>
                 <select
                   name="invoice"
@@ -308,6 +294,19 @@ const CreditForm = () => {
                 )}
               </div>
               <div>
+                <label className="block font-medium pb-1">Customer Name</label>
+                <input
+                  type="text"
+                  name="customername"
+                  value={creditData.customername}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border rounded"
+                />
+                {errors.customername && (
+                  <p className="text-red-500 text-sm">{errors.customername}</p>
+                )}
+              </div>
+              <div>
                 <label className="block font-medium pb-1">Salesperson</label>
                 <input
                   type="text"
@@ -334,7 +333,7 @@ const CreditForm = () => {
                     <th className="border p-2">Quantity</th>
                     <th className="border p-2">Rate</th>
                     <th className="border p-2">Discount (%)</th>
-                    <th className="border p-2">Tax (%)</th>
+                    <th className="border p-2">Tax (₹)</th>
                     <th className="border p-2">Amount</th>
                     <th className="border p-2">Action</th>
                   </tr>
@@ -366,6 +365,7 @@ const CreditForm = () => {
                         <input
                           type="number"
                           value={item.rate}
+                          disabled
                           onChange={(e) =>
                             handleItemChange(index, "rate", e.target.value)
                           }
@@ -386,6 +386,7 @@ const CreditForm = () => {
                         <input
                           type="number"
                           value={item.tax}
+                          disabled
                           onChange={(e) =>
                             handleItemChange(index, "tax", e.target.value)
                           }

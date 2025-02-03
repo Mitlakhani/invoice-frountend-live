@@ -57,7 +57,7 @@ const Review = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl mx-auto mt-40"
+      className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl mx-auto mt-40 md:mt-24"
     >
       <div>
         <div className="md:w-[30%] w-[50%] pb-3 mx-auto">

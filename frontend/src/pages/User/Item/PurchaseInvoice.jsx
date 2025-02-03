@@ -20,7 +20,7 @@ export const PurchaseInvoice = () => {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
   const userId = user ? JSON.parse(user).id : null;
-
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
   // Format date to DD-MM-YYYY
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -32,13 +32,14 @@ export const PurchaseInvoice = () => {
 
   useEffect(() => {
     const fetchInvoices = async () => {
+      setIsLoading(true); // Set loading to true when fetching starts
       try {
         const token = localStorage.getItem("token");
         if (!token) {
           setError("Token not found");
           return;
         }
-
+  
         const response = await fetch(
           `https://invoich-backend.onrender.com/api/purchaseInvoice/getallpurchaseinvoice`,
           {
@@ -48,26 +49,26 @@ export const PurchaseInvoice = () => {
             },
           }
         );
-
+  
         if (!response.ok) throw new Error("Failed to fetch invoices");
         const datares = await response.json();
         const data = datares.purchaseinvoices.map((invoice) => ({
           ...invoice,
           date: formatDate(invoice.createdAt), // Format createdAt
         }));
-        console.log(data);
-
+  
         const filteredInvoices = data.filter(
           (invoice) => invoice.userId == userId
         );
-        console.log(filteredInvoices);
         setInvoiceData(filteredInvoices);
       } catch (err) {
         console.error("Error fetching invoices:", err);
         setError("Failed to fetch invoices");
+      } finally {
+        setIsLoading(false); // Set loading to false after fetching is complete
       }
     };
-
+  
     fetchInvoices();
   }, [userId, file]);
 
@@ -330,57 +331,67 @@ export const PurchaseInvoice = () => {
               </tr>
             </thead>
             <tbody>
-              {invoiceData.length === 0 ? (
-                <tr>
-                  <td colSpan="8">
-                    <Skeleton count={10} height={30} className="mb-3" />
-                  </td>
-                </tr>
-              ) : (
-                filteredItems?.map((item) => (
-                  <tr className="border-t text-left" key={item._id}>
-                    <td className="p-3 text-sm sm:text-base font-semibold">
-                      {item.date || "N/A"}
-                    </td>
-                    <td className="p-3 text-sm sm:text-base font-semibold">
-                      {item.invoiceNumber || "N/A"}
-                    </td>
-                    <td className="p-3 text-sm sm:text-base font-semibold">
-                      {item?.itemID?.name}
-                    </td>
-                    <td className="p-3 text-sm sm:text-base font-semibold">
-                      {item.quantity}
-                    </td>
-                    <td className="p-3 text-sm sm:text-base font-semibold">
-                      {item.unit}
-                    </td>
-                    <td className="p-3 text-sm sm:text-base font-semibold">
-                      {item.price}
-                    </td>
-                    <td className="p-3 text-sm sm:text-base font-semibold">
-                      {item.total}
-                    </td>
-                    <td className="flex items-center justify-center py-2 px-2">
-                      <div className="w-8 h-8 text-[#39973D] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm">
-                        <button onClick={() => editInvoice(item._id)}>
-                          <FaEdit />
-                        </button>
-                      </div>
-                      <div className="w-8 h-8 text-[#0EABEB] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm mx-2">
-                        <Link to={`/user/purchaseView/${item._id}`}>
-                          <FaEye />
-                        </Link>
-                      </div>
-                      <div className="w-8 h-8 text-[#E94444] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm">
-                        <button onClick={() => handleDelete(item._id)}>
-                          <MdDelete />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
+  {isLoading ? (
+    // Show skeleton loader only if loading
+    <tr>
+      <td colSpan="8">
+        <Skeleton count={10} height={30} className="mb-3" />
+      </td>
+    </tr>
+  ) : invoiceData.length === 0 ? (
+    // Show "No Invoices" message when there are no invoices
+    <tr>
+      <td colSpan="8" className="text-center text-gray-500">
+        No invoices available
+      </td>
+    </tr>
+  ) : (
+    // Show invoice data when it's available
+    filteredItems?.map((item) => (
+      <tr className="border-t text-left" key={item._id}>
+        <td className="p-3 text-sm sm:text-base font-semibold">
+          {item.date || "N/A"}
+        </td>
+        <td className="p-3 text-sm sm:text-base font-semibold">
+          {item.invoiceNumber || "N/A"}
+        </td>
+        <td className="p-3 text-sm sm:text-base font-semibold">
+          {item?.itemID?.name}
+        </td>
+        <td className="p-3 text-sm sm:text-base font-semibold">
+          {item.quantity}
+        </td>
+        <td className="p-3 text-sm sm:text-base font-semibold">
+          {item.unit}
+        </td>
+        <td className="p-3 text-sm sm:text-base font-semibold">
+          {item.price}
+        </td>
+        <td className="p-3 text-sm sm:text-base font-semibold">
+          {item.total}
+        </td>
+        <td className="flex items-center justify-center py-2 px-2">
+          <div className="w-8 h-8 text-[#39973D] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm">
+            <button onClick={() => editInvoice(item._id)}>
+              <FaEdit />
+            </button>
+          </div>
+          <div className="w-8 h-8 text-[#0EABEB] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm mx-2">
+            <Link to={`/user/purchaseView/${item._id}`}>
+              <FaEye />
+            </Link>
+          </div>
+          <div className="w-8 h-8 text-[#E94444] bg-[#f6f8fb] rounded-md flex items-center justify-center text-sm">
+            <button onClick={() => handleDelete(item._id)}>
+              <MdDelete />
+            </button>
+          </div>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
+
           </table>
         </div>
       </div>

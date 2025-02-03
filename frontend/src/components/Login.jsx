@@ -141,14 +141,8 @@ const Login = () => {
               </div>
 
               {/* Remember Me & Forgot Password */}
-              <div className="flex flex-col sm:flex-row items-center justify-between mb-6">
-                <label className="flex items-center text-sm mb-2 sm:mb-0">
-                  <input
-                    type="checkbox"
-                    className="mr-2 rounded text-[#438A7A] focus:ring-[#438A7A]"
-                  />
-                  Remember me
-                </label>
+              <div className="flex flex-col sm:flex-row items-center justify-end mb-6">
+             
                 <Link
                   to="/forgetpassword"
                   className="text-sm text-[#438A7A] hover:underline"
@@ -161,7 +155,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full px-4 py-2 text-white bg-[#438A7A] rounded-lg hover:bg-[#35695E] focus:outline-none"
+                className="w-full px-4 py-2 text-white bg-[#438A7A] rounded-lg hover:bg-[#35695E] focus:outline-none cursor-pointer"
               >
                 {loading ? "Logging in..." : "Log In"}
               </button>

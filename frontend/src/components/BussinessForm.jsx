@@ -301,7 +301,7 @@ export const BussinessForm = () => {
         );
 
         if (registerResponse.status == 200) {
-          toast.success("Business registration completed successfully!", {
+          toast.success("Register successfully!", {
             position: "top-right",
             autoClose: 3000,
           });
@@ -322,15 +322,16 @@ export const BussinessForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex ">
-      <div className="flex flex-col md:flex-row w-full max-w-[1920px] mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 max-w-full">
+      <ToastContainer/>
+      <div className="flex flex-col md:flex-row w-full max-w-[1920px] mx-auto h-screen bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Form Section */}
         <div className="w-full md:w-1/2 h-full p-6 md:p-10 flex flex-col justify-center items-center relative">
           {/* Logo in the top-left corner */}
           <img
             src="/img/logo.png"
             alt="Logo"
-            className="absolute top-6 left-6 h-12 sm:h-14"
+             className="absolute top-4 left-4 md:top-6 md:left-6 h-10 sm:h-12 lg:h-10 md:h-12"
           />
 
           <div className="xl:w-[60%] w-full mt-20 md:mt-10 bg-white shadow-lg p-6 rounded-lg">
@@ -423,7 +424,7 @@ export const BussinessForm = () => {
                   onClick={handleSubmit}
                   type="submit"
                   disabled={loading}
-                  className="w-full px-4 py-3 text-sm font-semibold text-white bg-bgprimary rounded-lg hover:bg-black focus:ring-2 focus:ring-bgprimary focus:outline-none"
+                  className="w-full px-4 py-3 text-sm font-semibold text-white bg-bgprimary rounded-lg hover:bg-black focus:ring-2 focus:ring-bgprimary focus:outline-none cursor-pointer"
                 >
                   {loading ? "Loading..." : "Next"}
                 </button>
