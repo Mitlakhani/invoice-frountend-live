@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { MdAdd, MdDelete } from "react-icons/md";
-import { Search } from "lucide-react";
+import { Download, Search } from "lucide-react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -201,11 +201,17 @@ export const Items = () => {
                   className="hidden"
                 />
                 <button
-                  className="bg-[#438A7A] px-3 rounded mx-2"
+                  className="bg-[#438A7A] px-3 rounded md:mx-0 mx-2"
                   onClick={uploadCSV}
                 >
                   <Upload />
                 </button>
+                <button
+  className="bg-[#438A7A]  rounded"
+  onClick={() => window.open("https://res.cloudinary.com/dnwfjgfjl/raw/upload/v1738620665/items_data_qb6aly.csv", "_blank")}
+>
+  <Download />
+</button>
               </div>
             </div>
           </div>

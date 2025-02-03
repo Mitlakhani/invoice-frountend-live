@@ -5,7 +5,7 @@ import { MdDelete } from "react-icons/md";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { toast, Toaster } from "react-hot-toast";
-import { Upload } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 
 function Invoice() {
   const [invoices, setInvoices] = useState([]);
@@ -243,11 +243,17 @@ function Invoice() {
                 className="hidden"
               />
               <button
-                className="bg-[#438A7A] px-2 rounded md:mx-2"
+                className="bg-[#438A7A] px-2 rounded md:mx-0 mx-2"
                 onClick={uploadCSV}
               >
                 <Upload />
               </button>
+              <button
+  className="bg-[#438A7A]  rounded"
+  onClick={() => window.open("https://res.cloudinary.com/dnwfjgfjl/raw/upload/v1738620700/Invoice_data_yzadkq.csv", "_blank")}
+>
+  <Download />
+</button>
             </div>
             <div className="relative">
               <button

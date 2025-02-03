@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast"; // New import for react-hot-toast
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { Upload } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import Skeleton from "react-loading-skeleton"; // Importing the Skeleton package
 
 const Expenses = () => {
@@ -322,11 +322,17 @@ const Expenses = () => {
                   className="hidden"
                 />
                 <button
-                  className="bg-[#438A7A] px-3 rounded mx-2"
+                  className="bg-[#438A7A] px-3 rounded mx-2 md:mx-0"
                   onClick={uploadCSV}
                 >
                   <Upload />
                 </button>
+                <button
+  className="bg-[#438A7A]  rounded"
+  onClick={() => window.open("https://res.cloudinary.com/dnwfjgfjl/raw/upload/v1738620744/expense_data_wlfjef.csv", "_blank")}
+>
+  <Download />
+</button>
               </div>
               <div className="relative">
                 {/* FaBars Button */}

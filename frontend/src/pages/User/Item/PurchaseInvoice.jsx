@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { Upload } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import Skeleton from "react-loading-skeleton"; // Import Skeleton
 
 export const PurchaseInvoice = () => {
@@ -258,11 +258,17 @@ export const PurchaseInvoice = () => {
                 className="hidden"
               />
               <button
-                className="bg-[#438A7A] px-3 rounded md:mx-2"
+                className="bg-[#438A7A] px-3 rounded md:mx-0 mx-2"
                 onClick={uploadCSV}
               >
                 <Upload />
               </button>
+              <button
+  className="bg-[#438A7A]  rounded"
+  onClick={() => window.open("https://res.cloudinary.com/dnwfjgfjl/raw/upload/v1738620721/purchaseinvoices_data_ny6mop.csv", "_blank")}
+>
+  <Download />
+</button>
             </div>
             <div className="relative">
               <button

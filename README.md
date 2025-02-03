@@ -89,10 +89,10 @@ Invoich is an advanced invoicing and billing platform that allows businesses to 
 - **react-loader-spinner**: For loading spinner components.
 - **react-loading-skeleton**: For skeleton loaders on loading pages or components.
 
-## Live URL
+## LIVE URL
 
 ```
-https://invoice-frountend-live-9sba.vercel.app
+https://invoice-frountend-live.vercel.app/
 ```
 
 ## Git Clone URL
